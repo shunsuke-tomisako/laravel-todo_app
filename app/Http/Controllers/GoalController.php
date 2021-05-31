@@ -17,7 +17,7 @@ class GoalController extends Controller
     {
         $goals = Auth::user()->goals;
 
-        return respose()->json($goals)
+        return respose()->json($goals);
     }
 
     /**
@@ -35,7 +35,7 @@ class GoalController extends Controller
 
         $goals = Auth::user()->goals;
 
-        return respose()->json($goals)
+        return respose()->json($goals);
     }
 
     /**
@@ -53,7 +53,7 @@ class GoalController extends Controller
 
         $goals = Auth::user()->goals;
 
-        return respose()->json($goals)
+        return respose()->json($goals);
     }
 
     /**
@@ -68,6 +68,6 @@ class GoalController extends Controller
 
         $goals = Auth::user()->goals;
 
-        return respose()->json($goals)
+        return respose()->json($goals);
     }
 }
