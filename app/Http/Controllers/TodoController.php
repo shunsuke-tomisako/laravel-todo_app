@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Todo;
 use App\Goal;
+use App\Tag;
 
 class TodoController extends Controller
 {
@@ -18,7 +19,7 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = $goal->todos()->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+        $todos = $goal->todos()->with('tags')->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
         return response()->json($todos);
     }
 
@@ -37,7 +38,7 @@ class TodoController extends Controller
         $todo->position = request('position');
         $todo->done = false;
         $todo->save();
-        $todos = $goal->todos()->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+        $todos = $goal->todos()->with('tags')->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
         return response()->json($todos);
     }
 
@@ -56,7 +57,7 @@ class TodoController extends Controller
         $todo->position = request('position');
         $todo->done = (bool)request('done');
         $todo->save();
-        $todos = $goal->todos()->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+        $todos = $goal->todos()->with('tags')->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
         return response()->json($todos);
     }
 
@@ -69,7 +70,7 @@ class TodoController extends Controller
     public function destroy(Todo $todo)
     {
         $todo->delete();
-        $todos = $goal->todos()->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+        $todos = $goal->todos()->with('tags')->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
         return response()->json($todos);
     }
 
@@ -86,7 +87,25 @@ class TodoController extends Controller
             $todo->moveAfter($exchangeTodo);
         }
 
-        $todos = $goal->todos()->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+        $todos = $goal->todos()->with('tags')->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+        return response()->json($todos);
+    }
+
+    public function addTag(Request $request, Goal $goal, Todo $todo, Tag $tag)
+    {
+        $todo->tags()->attach($tag->id);
+
+        $todos = $goal->todos()->with('tags')->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+
+        return response()->json($todos);
+    }
+
+    public function removeTag(Request $request, Goal $goal, Todo $todo, Tag $tag)
+    {
+        $todo->tags()->detach($tag->id);
+
+        $todos = $goal->todos()->with('tags')->orderBy('done', 'asc')->orderBy('position', 'asc')->get();
+
         return response()->json($todos);
     }
 }
